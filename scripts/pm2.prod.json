@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "service",
+      "script": "./scripts/start.sh",
+      "exec_mode": "fork",
+      "instances": 1,
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
