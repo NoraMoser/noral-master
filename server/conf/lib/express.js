@@ -16,6 +16,36 @@ import lusca from 'lusca'
 import fs from 'fs'
 import chalk from 'chalk'
 import cors from 'cors'
+import mongoose from 'mongoose';
+import Grid from 'gridfs-stream';
+
+// Initialize GridFS
+const conn = mongoose.connection;
+let gfs;
+
+conn.once('open', () => {
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('fs');  // Default GridFS collection name
+});
+
+// Route to retrieve media by ID
+app.get('/media/:id', (req, res) => {
+  gfs.files.findOne({ _id: mongoose.Types.ObjectId(req.params.id) }, (err, file) => {
+    if (!file || file.length === 0) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+
+    // Check file type
+    if (file.contentType.startsWith('image') || file.contentType.startsWith('video')) {
+      res.set('Content-Type', file.contentType);
+      const readStream = gfs.createReadStream({ _id: file._id });
+      readStream.pipe(res);
+    } else {
+      res.status(400).json({ error: 'Not a media file' });
+    }
+  });
+});
+
 
 const MongoStore = require('connect-mongo')(session)
 const isProduction = process.env.NODE_ENV === 'production'
