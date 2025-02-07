@@ -1,3 +1,8 @@
+import dotenv from "dotenv";
+dotenv.config();
+
+console.log("DATABASE_URI:", process.env.DATABASE_URI);
+
 import conf from './conf/conf'
 import express from './conf/lib/express'
 import mongoose from './conf/lib/mongoose'
@@ -9,7 +14,20 @@ const SERVER_URI = `${conf.app.protocol}://${conf.app.host}:${conf.app.port}`
  * Connect mongoose
  ************************************************/
 mongoose.loadModels()
-mongoose.connect().then(db => { initApp(express(db)) })
+mongoose.connect(process.env.DATABASE_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  autoIndex: false, // Disable auto index creation
+})
+.then(db => {
+  console.log("MongoDB Connected Successfully");
+  initApp(express(db));
+})
+.catch(err => {
+  console.error("MongoDB Connection Error:", err.message);
+  process.exit(1);
+});
+
 /************************************************
  * Init application
  ************************************************/
