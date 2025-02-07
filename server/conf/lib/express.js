@@ -15,6 +15,7 @@ import socketio from './socket.io'
 import lusca from 'lusca'
 import fs from 'fs'
 import chalk from 'chalk'
+import cors from 'cors'
 
 const MongoStore = require('connect-mongo')(session)
 const isProduction = process.env.NODE_ENV === 'production'
@@ -89,29 +90,24 @@ function initLocalVariables(app) {
   // Passing the request url to environment locals
   app.use((req, res, next) => {
     res.locals.host = `${req.protocol}://${req.hostname}`
-    res.locals.url = `${req.protoco}://${req.headers.host}${req.originalUrl}`
+    res.locals.url = `${req.protocol}://${req.headers.host}${req.originalUrl}`
     next()
   })
-
 }
 
 /*********************************************
  * Initialize application middleware
 *********************************************/
 function initMiddleware(app) {
-  //CORS middleware
-  const allowCrossDomain = (req, res, next) => {
-    const allowedOrigins = ['https://moser-family.onrender.com/', 'http://localhost:8000']
-    const origin = req.headers.origin
-    if (allowedOrigins.includes(origin)) {
-      res.header('Access-Control-Allow-Origin', origin)
-    }
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-    next()
-  }
-    
-  app.use(allowCrossDomain)
+  // CORS middleware
+  const allowCrossDomain = cors({
+    origin: ['https://moser-family.onrender.com', 'http://localhost:8000'], // Specify allowed origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed HTTP methods
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],  // Allowed headers
+    credentials: true,  // Allow cookies to be included in requests
+  });
+
+  app.use(allowCrossDomain);  // Apply CORS globally
 
   app.options('*', (req, res) => {
     res.header('Access-Control-Allow-Origin', '*')
@@ -143,14 +139,12 @@ function initMiddleware(app) {
   app.engine('html', require('ejs').renderFile)
   app.set('view engine', 'html') 
 
-
-
-  // Add this code for maximun 150mb
+  // Add this code for maximum 150mb
   app.use(bodyParser.json({limit: '150mb'}))
   app.use(bodyParser.urlencoded({
     limit: '150mb',
     extended: true,
-    parameterLimit:50000
+    parameterLimit: 50000
   }))
 
   app.use(methodOverride())
