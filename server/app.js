@@ -2,8 +2,6 @@ import conf from './conf/conf'
 import express from './conf/lib/express'
 import mongoose from './conf/lib/mongoose'
 import chalk from 'chalk'
-import userRoutes from './modules/user/routes'
-import '../server/modules/user/userModel' // Import the user model
 
 const SERVER_URI = `${conf.app.protocol}://${conf.app.host}:${conf.app.port}`
 
@@ -29,8 +27,6 @@ mongoose.connect(process.env.DATABASE_URI, {
  * Init application
  ************************************************/
 function initApp(app) {
-  // Use user routes for handling user-related requests
-  app.use('/api', userRoutes);  // Prefix all user routes with /api
 
   const PORT = process.env.APP_PORT || 8000;
   app.listen(PORT, '0.0.0.0')
