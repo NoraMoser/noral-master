@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
 import ApplicationController from '../application/controller'
-import UserAuthController from '../user/controllers/user.auth.controller'
 import formidable from 'formidable'
 import { createBucket, createModel } from 'mongoose-gridfs'
 import fs from 'fs'
 import crypto from 'crypto'
+import File from '../../modules/file/File'
 const File = mongoose.model('File')
 
 function FileController() {}
