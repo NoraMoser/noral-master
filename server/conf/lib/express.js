@@ -221,7 +221,6 @@ function initHelmetHeaders(app) {
 export default (db) => {
   const sessionConfig = initSession(app, db);
   initSSLValidation();
-  initModulesServerPolicies();
   initLocalVariables(app);
   initMiddleware(app);
   initHelmetHeaders(app);

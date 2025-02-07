@@ -5,24 +5,25 @@ import mongoose from 'mongoose'
 
 function mongooseConf() {}
 
+const MONGO_URI = 'mongodb://NoraMoser:fGUWlPJwU4G8EZPX@cluster0-shard-00-01.kriuc.mongodb.net:27017,cluster0-shard-00-02.kriuc.mongodb.net:27017,cluster0-shard-00-00.kriuc.mongodb.net:27017/nora-dev?authSource=admin&replicaSet=atlas-9biaq2-shard-0&retryWrites=true&w=majority&appName=Cluster0&ssl=true';
 /************************************************
  * Load the mongoose models
- ************************************************/
+************************************************/
 mongooseConf.loadModels = (callback) => {
   conf.assets.models.forEach(modelPath => {
     require(path.join(process.cwd(), modelPath))
-  })
-
-  if (callback) { callback() }
-}
-
-
-/************************************************
- * Initialize mongoose
+    })
+    
+    if (callback) { callback() }
+    }
+    
+    
+    /************************************************
+     * Initialize mongoose
  ************************************************/
 mongooseConf.connect = async () => {
   try {
-    const db = await mongoose.connect(conf.db.uri, conf.db.options)
+    const db = await mongoose.connect(MONGO_URI, conf.db.options)
     return db
   } 
   catch(err) {
@@ -30,6 +31,9 @@ mongooseConf.connect = async () => {
     console.log(err)
   }
 }
+
+import mongoose from 'mongoose';
+
 
 /************************************************
  * Handle mongoose disconnect
