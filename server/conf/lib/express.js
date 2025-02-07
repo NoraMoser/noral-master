@@ -130,6 +130,9 @@ conn.once('open', () => {
 
 // Route to retrieve media by ID
 app.get('/media/:id', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');  // Allow all origins or specify allowed domains
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   gfs.files.findOne({ _id: mongoose.Types.ObjectId(req.params.id) }, (err, file) => {
     if (!file || file.length === 0) {
       return res.status(404).json({ error: 'File not found' });
