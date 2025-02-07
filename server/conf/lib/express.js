@@ -101,7 +101,7 @@ function initLocalVariables(app) {
 function initMiddleware(app) {
   //CORS middleware
   const allowCrossDomain = (req, res, next) => {
-    const allowedOrigins = ['http://yourfrontenddomain.com', 'http://localhost:8000']
+    const allowedOrigins = ['https://moser-family.onrender.com/', 'http://localhost:8000']
     const origin = req.headers.origin
     if (allowedOrigins.includes(origin)) {
       res.header('Access-Control-Allow-Origin', origin)
