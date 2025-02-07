@@ -134,6 +134,7 @@ app.get('/api/media/:id', (req, res) => {
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   gfs.files.findOne({ _id: mongoose.Types.ObjectId(req.params.id) }, (err, file) => {
+    console.log(file)
     if (!file || file.length === 0) {
       return res.status(404).json({ error: 'File not found' });
     }
