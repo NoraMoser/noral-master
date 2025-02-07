@@ -2,7 +2,7 @@ import conf from './conf/conf'
 import express from './conf/lib/express'
 import mongoose from './conf/lib/mongoose'
 import chalk from 'chalk'
-import userRoutes from './modules/user/userRoutes' // Import the user routes
+import userRoutes from './modules/user/routes'
 import '../server/modules/user/userModel' // Import the user model
 
 const SERVER_URI = `${conf.app.protocol}://${conf.app.host}:${conf.app.port}`
