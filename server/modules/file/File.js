@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const FileSchema = new mongoose.Schema({
   data: { type: mongoose.Schema.Types.ObjectId, required: true },
@@ -6,6 +6,9 @@ const FileSchema = new mongoose.Schema({
   size: { type: Number, required: true },
   type: { type: String, required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } // Assuming it relates to a user
-})
+});
 
-export default mongoose.model('File', FileSchema)
+// Prevent overwriting the model if it's already registered
+const File = mongoose.models.File || mongoose.model('File', FileSchema);
+
+export default File;
