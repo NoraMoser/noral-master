@@ -19,7 +19,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import Grid from 'gridfs-stream';
 import multer from 'multer';
-import FileController from './modules/file/controller'
+import FileController from '../../modules/file/controller'
 
 // Initialize GridFS
 const conn = mongoose.connection;
