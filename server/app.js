@@ -1,8 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-console.log("DATABASE_URI:", process.env.DATABASE_URI);
-
 import conf from './conf/conf'
 import express from './conf/lib/express'
 import mongoose from './conf/lib/mongoose'
@@ -32,7 +27,8 @@ mongoose.connect(process.env.DATABASE_URI, {
  * Init application
  ************************************************/
 function initApp(app) {
-  app.listen(conf.app.port, conf.app.host)
+  const PORT = process.env.APP_PORT || 8000;
+  app.listen(PORT, '0.0.0.0')
   console.log('--')
   console.log(chalk.green(conf.app.title))
   console.log(chalk.green(`Environment:         ${process.env.NODE_ENV}`))
