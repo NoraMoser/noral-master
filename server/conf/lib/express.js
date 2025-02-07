@@ -129,7 +129,7 @@ conn.once('open', () => {
 });
 
 // Route to retrieve media by ID
-app.get('/media/:id', (req, res) => {
+app.get('/api/media/:id', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');  // Allow all origins or specify allowed domains
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
