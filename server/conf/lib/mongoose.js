@@ -32,9 +32,6 @@ mongooseConf.connect = async () => {
   }
 }
 
-import mongoose from 'mongoose';
-
-
 /************************************************
  * Handle mongoose disconnect
  ************************************************/
