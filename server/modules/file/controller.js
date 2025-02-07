@@ -4,7 +4,7 @@ import formidable from 'formidable'
 import { createBucket, createModel } from 'mongoose-gridfs'
 import fs from 'fs'
 import crypto from 'crypto'
-import File from '../../modules/file/File'
+import File from '../../modules/file/model'
 
 function FileController() {}
 
