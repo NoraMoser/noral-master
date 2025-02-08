@@ -131,17 +131,19 @@ conn.once('open', () => {
 app.get('/api/media/:id', async (req, res) => {
   const fileId = req.params.id; // Get file ID from URL
   try {
-      const file = await db.fs.files.findOne({ _id: ObjectId(fileId) });
-      if (!file) {
-          return res.status(404).send('File not found');
-      }
-
-      // Optionally, set appropriate headers for file download or display
-      res.setHeader('Content-Type', file.contentType); // Set content type (e.g., 'video/mp4')
-      const fileStream = db.fs.createReadStream({ _id: ObjectId(fileId) });
-
-      // Pipe the file to the response
-      fileStream.pipe(res);
+    if (!gfs) {
+      return res.status(500).send('GridFS is not initialized yet');
+    }
+  
+    const fileId = mongoose.Types.ObjectId(req.params.id);
+    const fileStream = gfs.openDownloadStream(fileId);
+  
+    fileStream.on('error', (err) => {
+      return res.status(404).send('File not found');
+    });
+  
+    res.set('Content-Type', 'application/octet-stream');
+    fileStream.pipe(res);
   } catch (err) {
       console.error('Error fetching file:', err);
       res.status(500).send('Error fetching file');
