@@ -3,7 +3,7 @@ import express from './conf/lib/express'
 import mongoose from './conf/lib/mongoose'
 import chalk from 'chalk'
 
-const SERVER_URI = `${conf.app.protocol}://${conf.app.host}:${conf.app.port}`
+const SERVER_URI = `${conf.app.protocol}://${conf.app.host}:${process.env.PORT || 8000}`;
 
 /************************************************
  * Connect mongoose
@@ -28,7 +28,7 @@ mongoose.connect(process.env.DATABASE_URI, {
  ************************************************/
 function initApp(app) {
 
-  const PORT = process.env.APP_PORT || 8000;
+  const PORT = process.env.PORT || 8000;
   app.listen(PORT, '0.0.0.0')
   console.log('--')
   console.log(chalk.green(conf.app.title))
