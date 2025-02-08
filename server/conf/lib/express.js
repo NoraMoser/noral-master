@@ -129,13 +129,12 @@ conn.once('open', () => {
 });
 
 app.get('/api/media/:id', async (req, res) => {
-  const fileId = req.params.id; // Get file ID from URL
+  
+    const fileId = mongoose.Types.ObjectId(req.params.id);
   try {
     if (!gfs) {
       return res.status(500).send('GridFS is not initialized yet');
     }
-  
-    const fileId = mongoose.Types.ObjectId(req.params.id);
     const fileStream = gfs.openDownloadStream(fileId);
   
     fileStream.on('error', (err) => {
