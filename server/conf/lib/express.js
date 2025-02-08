@@ -128,26 +128,22 @@ conn.once('open', () => {
   gfs.collection('fs');  // Default GridFS collection name
 });
 
-// Route to retrieve media by ID
-app.get('/api/media/:id', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');  // Allow all origins or specify allowed domains
-  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  gfs.files.findOne({ _id: mongoose.Types.ObjectId(req.params.id) }, (err, file) => {
-    console.log(file)
-    if (!file || file.length === 0) {
-      return res.status(404).json({ error: 'File not found' });
-    }
+conn.once('open', () => {
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('uploads'); // Change this if needed
+});
 
-    // Check file type
-    if (file.contentType.startsWith('image') || file.contentType.startsWith('video')) {
+app.get('/api/media/:id', async (req, res) => {
+  try {
+      const file = await gfs.files.findOne({ _id: mongoose.Types.ObjectId(req.params.id) });
+      if (!file) return res.status(404).json({ error: 'File not found' });
+
+      const readStream = gfs.createReadStream(file.filename);
       res.set('Content-Type', file.contentType);
-      const readStream = gfs.createReadStream({ _id: file._id });
       readStream.pipe(res);
-    } else {
-      res.status(400).json({ error: 'Not a media file' });
-    }
-  });
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
 });
   
   // Should be placed before express.static
