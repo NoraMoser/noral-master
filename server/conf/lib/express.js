@@ -128,24 +128,26 @@ conn.once('open', () => {
   gfs.collection('fs');  // Default GridFS collection name
 });
 
-conn.once('open', () => {
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads'); // Change this if needed
-});
-
 app.get('/api/media/:id', async (req, res) => {
+  const fileId = req.params.id; // Get file ID from URL
   try {
-      const file = await gfs.files.findOne({ _id: mongoose.Types.ObjectId(req.params.id) });
-      if (!file) return res.status(404).json({ error: 'File not found' });
+      const file = await db.fs.files.findOne({ _id: ObjectId(fileId) });
+      if (!file) {
+          return res.status(404).send('File not found');
+      }
 
-      const readStream = gfs.createReadStream(file.filename);
-      res.set('Content-Type', file.contentType);
-      readStream.pipe(res);
+      // Optionally, set appropriate headers for file download or display
+      res.setHeader('Content-Type', file.contentType); // Set content type (e.g., 'video/mp4')
+      const fileStream = db.fs.createReadStream({ _id: ObjectId(fileId) });
+
+      // Pipe the file to the response
+      fileStream.pipe(res);
   } catch (err) {
-      res.status(500).json({ error: err.message });
+      console.error('Error fetching file:', err);
+      res.status(500).send('Error fetching file');
   }
 });
-  
+
   // Should be placed before express.static
   app.use(compress({
     filter: (req, res) => {
