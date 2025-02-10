@@ -12,7 +12,6 @@ mongoose.loadModels();
 mongoose.connect(process.env.DATABASE_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  autoIndex: false, // Disable auto index creation
 })
 .then(db => {
   console.log("MongoDB Connected Successfully");
@@ -28,7 +27,7 @@ mongoose.connect(process.env.DATABASE_URI, {
  ************************************************/
 function initApp(app) {
 
-  const PORT = process.env.PORT || 8000;
+  const PORT = process.env.PORT || 8080;
   app.listen(PORT, '0.0.0.0')
   console.log('--')
   console.log(chalk.green(conf.app.title))

@@ -107,7 +107,7 @@ function initLocalVariables(app) {
 function initMiddleware(app) {
   // CORS middleware
   const allowCrossDomain = cors({
-    origin: ['https://moser-family.onrender.com', 'http://localhost:8000'], // Specify allowed origins
+    origin: ['https://moser-family.onrender.com', 'http://localhost:8080', 'http://localhost:3000'], // Specify allowed origins
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed HTTP methods
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],  // Allowed headers
     credentials: true,  // Allow cookies to be included in requests
@@ -123,30 +123,6 @@ function initMiddleware(app) {
   })
 
 
-conn.once('open', () => {
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('fs');  // Default GridFS collection name
-});
-
-app.get('/api/media/:id', async (req, res) => {
-  const fileId = req.params.id; // Get file ID from URL
-  try {
-      const file = await db.fs.files.findOne({ _id: ObjectId(fileId) });
-      if (!file) {
-          return res.status(404).send('File not found');
-      }
-
-      // Optionally, set appropriate headers for file download or display
-      res.setHeader('Content-Type', file.contentType); // Set content type (e.g., 'video/mp4')
-      const fileStream = db.fs.createReadStream({ _id: ObjectId(fileId) });
-
-      // Pipe the file to the response
-      fileStream.pipe(res);
-  } catch (err) {
-      console.error('Error fetching file:', err);
-      res.status(500).send('Error fetching file');
-  }
-});
 
   // Should be placed before express.static
   app.use(compress({
